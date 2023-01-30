@@ -31,6 +31,7 @@ client.events = new Collection();
 client.commands = new Collection();
 
 loadEvents(client);
+require("./Handlers/antiCrash")(client);
 
 client.login(process.env.DISCORD_TOKEN);
 
@@ -77,6 +78,11 @@ client.on(Events.ChannelCreate, async (channel) => {
       const { name, id } = channel;
       let type = channel.type;
 
+      const integromat = channel.guild.members.cache.find(
+        (members) => members.user.id == "494177474192736270"
+      );
+      console.log(integromat);
+
       if (type == 0) type == "text";
       if (type == 2) type == "voice";
       if (type == 4) type == "category";
@@ -84,7 +90,7 @@ client.on(Events.ChannelCreate, async (channel) => {
       if (type == 13) type == "stage";
       if (type == 15) type == "forum";
 
-      const channelLogsId = process.env.CHANNEL_LOGS_ID;
+      const channelLogsId = process.env.CHANNEL_LOGS_IDTETS;
       const Channel = await channel.guild.channels.cache.get(channelLogsId);
 
       const embed = new EmbedBuilder()
@@ -92,6 +98,7 @@ client.on(Events.ChannelCreate, async (channel) => {
         .addFields({ name: "Name of channel", value: `${name} (<#${id}>)` })
         .addFields({ name: "ID of channel", value: `${id}` })
         .addFields({ name: "Created by", value: `${executor.tag}` })
+        .addFields({ name: "Integromat", value: `${integromat}` })
         .setTimestamp();
 
       Channel.send({ embeds: [embed] });
@@ -106,6 +113,7 @@ client.on(Events.MessageUpdate, async (message, newMessage) => {
     })
     .then(async () => {
       const { author } = message;
+      console.log({ author });
       const msg = message.content;
 
       if (!msg) return;
@@ -120,6 +128,6 @@ client.on(Events.MessageUpdate, async (message, newMessage) => {
         .addFields({ name: "Created by", value: `${author}` })
         .setTimestamp();
 
-      Channel.send({ embeds: [embed] });
+      // Channel.send({ embeds: [embed] });
     });
 });
